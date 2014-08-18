@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+   <head>
+       <link rel="stylesheet" href="webix/webix.css" type="text/css" media="screen" charset="utf-8">
+	   <link rel="stylesheet" href="index.css" type="text/css" media="screen" charset="utf-8">
+       <script src="webix/webix_debug.js" type="text/javascript" charset="utf-8"></script>
+	   <script src="data.js" type="text/javascript" charset="utf-8"></script>
+       <script src="App.js" type="text/javascript" charset="utf-8"></script>
+	   
+       <title>Test</title>
+   </head>
+   <body>
+       <script type="text/javascript" charset="utf-8">
+           webix.ready(function () {
+               webix.ui.fullScreen();
+               new App().init();
+           })
+       </script>
+   </body>
+</html>
