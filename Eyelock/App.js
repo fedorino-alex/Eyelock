@@ -101,8 +101,8 @@ appP._initLayout = function()
 							cells: 
 							[
 								{ id: 'null', template: 'EMPTY' },
-								{ id: 'add', template: 'add form' },
-								{ id: 'view', template: 'preview form' }
+								this._getAddForm(),
+								this._getPreviewForm()
 							]
 						},
 						{
@@ -128,16 +128,14 @@ appP._initLayout = function()
 
 appP._getAddForm = function()
 {
-    return 
-    {
-        view: 'form'
- //       elements: 
-    };
+    var form = { id:'view', view: 'form', elements: [{ view: 'checkbox', label: 'Checkbox' }] };
+    return form;
 };
 
 appP._getPreviewForm = function()
 {
-
+    var form = { id:'add', view: 'form', elements: [{}] };
+    return form;
 };
 
 appP._bind = function()
@@ -191,4 +189,3 @@ appP._onProcessClick = function()
 };
 
 appP = null;
-
