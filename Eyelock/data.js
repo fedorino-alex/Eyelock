@@ -1,6 +1,6 @@
 var example_data = 
 [
-	{ event: 'view', title:'Просмотр профиля', processed: true, data: { firstName: 'Иван', lastName: 'Петров', dob: '02/20/1988'} },
+	{ event: 'view', title: 'Просмотр профиля', processed: true, data: { firstName: 'Иван', lastName: 'Петров', dob: '02/20/1988', leftIris: 'data:image/gif;base64,R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapyuvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7', rightIris: 'data:image/gif;base64,R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapyuvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7'} },
 	{ event: 'add', title:'Добавление профиля', processed: true, data: { firstName: 'Добавленный', lastName: 'Чувак', dob: '01/10/1998'} },
 	{ event: 'view', title:'Просмотр профиля', processed: false, data: { firstName: 'Иван', lastName: 'Петров', dob: '02/20/1988'} },
 	{ event: 'add', title:'Добавление профиля', processed: false, data: { firstName: '', lastName: '', dob: ''} }

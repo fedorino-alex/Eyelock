@@ -100,7 +100,7 @@ appP._initLayout = function()
 							view: "multiview",
 							cells: 
 							[
-								{ id: 'null', template: 'EMPTY' },
+								{ id: 'null' },
 								this._getAddForm(),
 								this._getPreviewForm()
 							]
@@ -128,24 +128,95 @@ appP._initLayout = function()
 
 appP._getAddForm = function()
 {
-    var form = { id:'view', view: 'form', elements: [{ view: 'checkbox', label: 'Checkbox' }] };
+    var form = 
+    { 
+        id:'add', 
+        view: 'form', 
+        elements: 
+        [
+            {view: 'label', type: 'header', label: '<span class="FormTitle">Add user profile</span>'},
+            {view: 'text', label: 'First name:', name: 'firstName', labelWidth: 180},
+            {view: 'text', label: 'Last name:', name: 'lastName', labelWidth: 180},
+            {view: 'datepicker', label: 'Date of birth:', name: 'dob', labelWidth: 180},
+            {}
+        ],
+        rules:
+        {
+            firstName: webix.rules.isNotEmpty,
+            lastName: webix.rules.isNotEmpty,
+            dob: webix.rules.isNotEmpty
+        },
+        on:
+        {
+			onValidationError:function(id, value)
+            {
+				var text;
+
+				if (id == "lastName")
+					text = "Last name can't be empty";
+				if (id == "firstName")
+					text = "First name can't be empty";
+				if (id == "dob")
+					text = "Date of birth can't be empty";
+
+				webix.message({ type:"error", text:text });
+			}
+		}
+    };
     return form;
 };
 
 appP._getPreviewForm = function()
 {
-    var form = { id:'add', view: 'form', elements: [{}] };
+    var form = 
+    { 
+        id:'view', 
+        view: 'form', 
+        elements: 
+        [
+            { view: 'label', type: 'header', label: '<span class="FormTitle">Preview user profile</span>'},
+            { view: 'text', label: 'First name:', name: 'firstName', readonly: true, labelWidth: 180},
+            { view: 'text', label: 'Last name:', name: 'lastName', readonly: true, labelWidth: 180},
+            { view: 'datepicker', label: 'Date of birth:', name: 'dob', readonly: true, labelWidth: 180},
+            {}  
+        ],
+        rules:
+        {
+            firstName: webix.rules.isNotEmpty,
+            lastName: webix.rules.isNotEmpty,
+            dob: webix.rules.isNotEmpty
+        },
+        on:
+        {
+			onValidationError:function(id, value)
+            {
+				var text;
+
+				if (id == "lastName")
+					text = "Last name can't be empty";
+				if (id == "firstName")
+					text = "First name can't be empty";
+				if (id == "dob")
+					text = "Date of birth can't be empty";
+
+				webix.message({ type:"error", text:text });
+			}
+		}
+    };
     return form;
 };
 
 appP._bind = function()
 {
     // набор связываний и обработчиков событий
-
-    $$("tab_view").bind($$("queue"), "event", function(data) { return data || { event: 'empty'}; });
+    var list = $$("queue");
+    $$("add").bind(list, null, function(data) { return data ? data.data : null; });
+    $$("view").bind(list, null, function(data) { return data ? data.data : null; });
+    $$("tab_view").bind(list, "event", function(data) { return data || { event: 'empty'}; });
+    
+    list.attachEvent('onSelectChange', function() { $$("queue").getSelectedId() ? $$('processButton').enable() : $$('processButton').disable(); });
     $$('autoUpdateCheckbox').attachEvent('onChange', this._onAutoUpdateChanged.bind(this));
     $$('processButton').attachEvent('onItemClick', this._onProcessClick.bind(this));
-
 };
 
 appP.goToNextListItem = function()
@@ -165,14 +236,25 @@ appP.goToNextListItem = function()
 appP._doProcess = function()
 {
     var list = $$("queue"),
-        current = list.getCursor();
+        current = list.getCursor(),
+        currentItem = $$('queue').getSelectedItem(), 
+        form;
 
-    if (current)
-        list.data.getItem(current).processed = true;
+    if (currentItem && currentItem.event)
+        form = $$(currentItem.event);
+            
+    if (form.validate())
+    {
+        if (current)
+            list.data.getItem(current).processed = true;
 
-    // слать запрос.
+        // слать запрос.
 
-    list.refresh();
+        list.refresh();
+        return true;
+    }
+
+    return false;
 };
 
 // ------------------- Event handlers -------------------------
@@ -184,8 +266,8 @@ appP._onAutoUpdateChanged = function(value)
 
 appP._onProcessClick = function()
 {
-    this._doProcess();
-    this.goToNextListItem();
+    if (this._doProcess())
+        this.goToNextListItem();
 };
 
 appP = null;
