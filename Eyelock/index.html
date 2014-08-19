@@ -5,6 +5,8 @@
 	   <link rel="stylesheet" href="index.css" type="text/css" media="screen" charset="utf-8">
        <script src="webix/webix_debug.js" type="text/javascript" charset="utf-8"></script>
 	   <script src="data.js" type="text/javascript" charset="utf-8"></script>
+       <script src="webix_ext/layoutform.js" type="text/javascript" charset="utf-8"></script>
+       <script src="AutoUpdater.js" type="text/javascript" charset="utf-8"></script>
        <script src="App.js" type="text/javascript" charset="utf-8"></script>
 	   
        <title>Test</title>
@@ -13,7 +15,7 @@
        <script type="text/javascript" charset="utf-8">
            webix.ready(function () {
                webix.ui.fullScreen();
-               new App().init();
+               new Eyelock.App().init();
            })
        </script>
    </body>

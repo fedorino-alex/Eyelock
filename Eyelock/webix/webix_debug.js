@@ -2961,8 +2961,8 @@ webix.BaseBind = {
 			this._in_bind_processing = true;
 			var result = this.callEvent("onBindRequest");
 			this._in_bind_processing = false;
-			
-			return old_render.apply(this, ((result === false)?arguments:[]));
+
+			return old_render.apply(this, ((result === false) ? arguments : []));
 		};
 
 		if (this.getValue||this.getValues)

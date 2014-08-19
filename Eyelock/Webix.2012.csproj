@@ -20,6 +20,10 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.js" />
+    <Content Include="AutoUpdater.js" />
     <Content Include="data.js" />
     <Content Include="webix\fonts\font-license.txt" />
     <Content Include="webix\fonts\fontawesome-webfont.svg" />
@@ -96,6 +101,7 @@
     <Content Include="webix\webix.css" />
     <Content Include="webix\webix.js" />
     <Content Include="webix\webix_debug.js" />
+    <Content Include="webix_ext\layoutform.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
@@ -118,9 +124,14 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1459</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
