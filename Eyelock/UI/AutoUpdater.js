@@ -6,6 +6,7 @@ Eyelock.AutoUpdater = function (settings)
     this._delay = settings.AutoUpdateInterval || 5000;
     this._callback = settings.UpdateCallback;
     this._intervalId = -1;
+    this._url = settings.GetNewEvents;
 };
 
 var updP = Eyelock.AutoUpdater.prototype;
@@ -54,7 +55,7 @@ updP._onTimer = function (args)
 {
     var context = args.context;
     if (context._callback)
-        context._callback.call(this, context, { timestamp: Date.now() });
+        context._callback.call(this, context, { url: this._url });
 };
 
 updP = null;

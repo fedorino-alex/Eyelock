@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/Eyelock.Service" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Eyelock.Service" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="Event">
+    <xs:sequence>
+      <xs:element name="data" nillable="true" type="tns:User" />
+      <xs:element name="event" nillable="true" type="xs:string" />
+      <xs:element name="processed" type="xs:boolean" />
+      <xs:element name="timestamp" nillable="true" type="xs:string" />
+      <xs:element name="title" nillable="true" type="xs:string" />
+      <xs:element name="uid" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Event" nillable="true" type="tns:Event" />
+  <xs:complexType name="User">
+    <xs:sequence>
+      <xs:element name="dob" nillable="true" type="xs:string" />
+      <xs:element name="firstName" nillable="true" type="xs:string" />
+      <xs:element name="lastName" nillable="true" type="xs:string" />
+      <xs:element name="leftIris" nillable="true" type="xs:string" />
+      <xs:element name="rightIris" nillable="true" type="xs:string" />
+      <xs:element name="uid" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="User" nillable="true" type="tns:User" />
+  <xs:complexType name="ServiceResultOfboolean">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ServiceResultOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Eyelock.Service" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="boolean" Namespace="http://www.w3.org/2001/XMLSchema" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsSuccess" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Result" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServiceResultOfboolean" nillable="true" type="tns:ServiceResultOfboolean" />
+  <xs:complexType name="ServiceResultOfArrayOfEvent_PgLz_PdTx">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ServiceResultOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Eyelock.Service" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ArrayOfEvent" Namespace="http://schemas.datacontract.org/2004/07/Eyelock.Service" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsSuccess" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Result" nillable="true" type="tns:ArrayOfEvent" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServiceResultOfArrayOfEvent_PgLz_PdTx" nillable="true" type="tns:ServiceResultOfArrayOfEvent_PgLz_PdTx" />
+  <xs:complexType name="ArrayOfEvent">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Event" nillable="true" type="tns:Event" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfEvent" nillable="true" type="tns:ArrayOfEvent" />
+</xs:schema>

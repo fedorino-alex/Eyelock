@@ -25,24 +25,24 @@ namespace Eyelock.Service
         public User User { get; set; }
 
         [DataMember(IsRequired=true, Name="timestamp")]
-        public DateTime Timestamp { get; set; }
+        public string Timestamp { get; set; }
     }
 
     static class EventFactory
     {
         const string ADD_EVENT_TITLE = "Добавление профиля";
-        const string VIEW_EVENT_TITLE = "Добавление профиля";
+        const string VIEW_EVENT_TITLE = "Просмотр профиля";
         const string ADD = "add";
         const string VIEW = "view";
 
         public static Event GetAddEvent()
         {
-            return new Event() { Title = ADD_EVENT_TITLE, Type = ADD };
+			return new Event() { Title = ADD_EVENT_TITLE, Type = ADD, Timestamp = DateTime.UtcNow.ToString("o"), UID = Guid.NewGuid() };
         }
 
         public static Event GetViewEvent()
         {
-            return new Event() { Title = VIEW_EVENT_TITLE, Type = VIEW };
+            return new Event() { Title = VIEW_EVENT_TITLE, Type = VIEW, Timestamp = DateTime.UtcNow.ToString("o"), UID = Guid.NewGuid() };
         }
     }
 
@@ -71,8 +71,11 @@ namespace Eyelock.Service
     [DataContract]
     public class ServiceResult<T>
     {
+        [DataMember]
         public bool IsSuccess { get; set; }
+        [DataMember]
         public T Result { get; set; }
+        [DataMember]
         public string ErrorMessage { get; set; }
 
         public static ServiceResult<T> Success(T result)
@@ -94,4 +97,10 @@ namespace Eyelock.Service
             return new ServiceResult<T>() { IsSuccess = false, ErrorMessage = ex.Message };
         }
     }
+
+    public class BoolResult : ServiceResult<bool>
+    { }
+
+    public class EventsResult : ServiceResult<Event[]>
+    { }
 }

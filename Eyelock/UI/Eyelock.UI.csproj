@@ -44,6 +44,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -62,10 +63,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\DataContracts.cs" />
-    <Compile Include="Service\IQueueService.cs" />
-    <Compile Include="Service\QueueService.svc.cs">
-      <DependentUpon>QueueService.svc</DependentUpon>
+    <Compile Include="Service References\EyelockService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service\QueueService.asmx.cs">
+      <DependentUpon>QueueService.asmx</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -73,7 +78,19 @@
     <Content Include="AutoUpdater.js" />
     <Content Include="data.js" />
     <Content Include="img\no_eye_image.png" />
-    <Content Include="Service\QueueService.svc" />
+    <None Include="Service References\EyelockService\configuration91.svcinfo" />
+    <None Include="Service References\EyelockService\configuration.svcinfo" />
+    <None Include="Service References\EyelockService\Eyelock.UI.EyelockService.ServiceResultOfArrayOfEvent_PgLz_PdTx.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EyelockService\Eyelock.UI.EyelockService.ServiceResultOfboolean.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EyelockService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Service\QueueService.asmx" />
     <Content Include="webix\fonts\font-license.txt" />
     <Content Include="webix\fonts\fontawesome-webfont.svg" />
     <Content Include="img\settings.png" />
@@ -111,9 +128,21 @@
     <Content Include="webix_ext\layoutform.js" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\EyelockService\Eyelock.Service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\EyelockService\service.wsdl" />
+    <None Include="Service References\EyelockService\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\EyelockService\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="webix\fonts\fontawesome-webfont.eot" />
     <None Include="webix\fonts\fontawesome-webfont.woff" />
     <None Include="webix\fonts\PTS-webfont.eot" />
@@ -122,6 +151,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\EyelockService\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -8,7 +8,10 @@ Eyelock.App = function (settings)
     	AutoUpdate: false,
     	AutoUpdateInterval: 5000, //ms
     	CurrentItem: null,
-    	UpdateCallback: webix.bind(this._onUpdateCallback, this)
+    	UpdateCallback: webix.bind(this._onUpdateCallback, this),
+    	GetNewEvents: "Service/QueueService.asmx/GetNewEvents",
+    	GetAllEvents: "Service/QueueService.asmx/GetAllEvents",
+    	ProcessEvent: "Service/QueueService.asmx/ProcessEvent"
     };
 
 	this._updater = new Eyelock.AutoUpdater(this._settings);
@@ -54,7 +57,7 @@ appP._initPopupSettings = function ()
 appP._initLayout = function ()
 {
 	webix.ui({
-		rows: 
+		rows:
         [
 			{
 				cols:
@@ -86,14 +89,14 @@ appP._initLayout = function ()
 						id: "queue",
 						minWidth: 320,
 						width: 320,
-						data: example_data,
+						data: [],
 						template: "<div><b>#title#</b><div>#data.firstName# #data.lastName# #data.dob#</div></div>",
 						select: true,
 						type:
 						{
 							height: 'auto',
 							classname: function (obj)
-{
+							{
 								var css = webix.ui.list.prototype.type.classname.apply(this, arguments);
 								if (obj && obj.processed)
 									css = css + ' processed';
@@ -116,32 +119,32 @@ appP._initLayout = function ()
 							]
 						},
 						{
-                            borderless: false,
+							borderless: false,
 							view: 'button',
 							id: 'processButton',
 							value: 'Обработать',
 							inputWidth: 150,
 							enabled: false,
 							align: 'right',
-                            hotkey: 'enter'
+							hotkey: 'enter'
 						}]
 					}
 				]
 			}
-		]
+        ]
 	});
 };
 
 appP._getForm = function (title, id)
 {
-	var form = 
+	var form =
     {
-        id: id,
+    	id: id,
     	view: 'layoutform',
-		type: 'line',
+    	type: 'line',
     	rows:
 		[
-			{ view: 'label', type: 'header', label: '<span class="FormTitle">'+ title +'</span>', borderless: false },
+			{ view: 'label', type: 'header', label: '<span class="FormTitle">' + title + '</span>', borderless: false },
     		{
     			autoheight: true,
     			cols:
@@ -204,15 +207,15 @@ appP._getForm = function (title, id)
 				}
 			},
 			{}
-    	]
+		]
     };
 
-    return form;
+	return form;
 };
 
 appP._getAddForm = function ()
 {
-    return this._getForm('Добавление профиля', 'add');
+	return this._getForm('Добавление профиля', 'add');
 };
 
 appP._getPreviewForm = function ()
@@ -231,6 +234,8 @@ appP._bind = function ()
 	list.attachEvent('onSelectChange', webix.bind(this._onQueueSelectionChanged, this));
 	$$('autoUpdateCheckbox').attachEvent('onChange', webix.bind(this._onAutoUpdateChanged, this));
 	$$('processButton').attachEvent('onItemClick', webix.bind(this._onProcessClick, this));
+
+	this._onUpdateCallback(this, { url: this._settings.GetAllEvents });
 };
 
 appP.goToNextListItem = function ()
@@ -262,9 +267,7 @@ appP._doProcess = function ()
 		if (current)
 			list.data.getItem(current).processed = true;
 
-		// слать запрос.
-
-		list.refresh();
+		appP._sendProcessRequest(form.getValues());
 		return true;
 	}
 
@@ -274,11 +277,34 @@ appP._doProcess = function ()
 appP._appendNewEvents = function (events)
 {
 	var list = $$('queue');
-    if (events)
-    for (var i = 0; i < events.length; i++)
-        list.data.add(events[i]);
+	if (events)
+		for (var i = 0; i < events.length; i++)
+			list.data.add(events[i]);
 
-    list.refresh();
+	list.refresh();
+};
+
+appP._parseEvents = function (events)
+{
+	var event = null, result = [];
+	events = events.d || events;
+	if (events.IsSuccess)
+{
+		events = events.Result;
+		for (var i = 0; i < events.length; i++)
+{
+			event = events[i];
+
+			delete event["__type"];
+			delete event["ExtensionData"];
+			delete event.data["__type"];
+			delete event.data["ExtensionData"];
+
+			result.push(event);
+		}
+	}
+
+	return result;
 };
 
 // ------------------- Event handlers -------------------------
@@ -301,22 +327,47 @@ appP._onQueueSelectionChanged = function (sender, args)
 {
 	var list = $$("queue");
 	var current = this._settings.CurrentItem = list.getSelectedItem();
-	(list.getSelectedId() && current && !current.processed) ? 
-        $$('processButton').enable() : 
+	(list.getSelectedId() && current && !current.processed) ?
+        $$('processButton').enable() :
         $$('processButton').disable();
 };
 
 appP._onUpdateCallback = function (sender, args)
 {
 	// отправить запрос на получение новых элементов.
-	console.log('Send update request: timestamp = ' + args.timestamp);
-    
-	var list = $$("queue");
-    this._appendNewEvents(getNewData(list.data.count()));
+	webix
+        .ajax()
+        .header({ "Content-Type": "application/json" })
+        .post(args.url, null,
+        {
+        	success: webix.bind(this._onUpdateRequestSuccess, this),
+        	error: webix.assert_error
+        });
 };
 
-appP._onUpdateRequestSuccess = function (sender, args)
+appP._onUpdateRequestSuccess = function (text, data)
 {
+	var events = this._parseEvents(data.json());
+
+	if (events)
+		this._appendNewEvents(events);
+};
+
+appP._sendProcessRequest = function (event)
+{
+	webix
+        .ajax()
+        .header({ "Content-Type": "application/json" })
+        .post(this._settings.ProcessEvent, event,
+        {
+        	success: webix.bind(this._onProcessed, this),
+        	error: webix.assert_error
+        });
+};
+
+appP._onProcessed = function (result, args)
+{
+	// пометить как успешно обработанное ???
 };
 
 appP = null;

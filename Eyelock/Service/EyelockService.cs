@@ -21,11 +21,8 @@ namespace Eyelock.Service
 
         protected override void OnStart(string[] args)
         {
-			Debugger.Break();
 			if (m_ServiceHost != null)
-			{
 				m_ServiceHost.Close();
-			}
 
 			// Create a ServiceHost for the CalculatorService type and 
 			// provide the base address.
