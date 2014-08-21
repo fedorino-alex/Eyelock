@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eyelock.WinService.2012", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eyelock.Service.Impl.2012", "Eyelock\ServiceLib\Eyelock.Service.Impl.2012.csproj", "{BA02F1B6-78CF-4BD0-8AB0-6C1D1727A204}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eyelock.Database.2012", "Eyelock\DBProvider\Eyelock.Database.2012.csproj", "{3820033E-E728-45A7-BA22-BB3A6351591A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,16 @@ Global
 		{BA02F1B6-78CF-4BD0-8AB0-6C1D1727A204}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{BA02F1B6-78CF-4BD0-8AB0-6C1D1727A204}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BA02F1B6-78CF-4BD0-8AB0-6C1D1727A204}.Release|x86.ActiveCfg = Release|Any CPU
+		{3820033E-E728-45A7-BA22-BB3A6351591A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3820033E-E728-45A7-BA22-BB3A6351591A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3820033E-E728-45A7-BA22-BB3A6351591A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3820033E-E728-45A7-BA22-BB3A6351591A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3820033E-E728-45A7-BA22-BB3A6351591A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3820033E-E728-45A7-BA22-BB3A6351591A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3820033E-E728-45A7-BA22-BB3A6351591A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3820033E-E728-45A7-BA22-BB3A6351591A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3820033E-E728-45A7-BA22-BB3A6351591A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3820033E-E728-45A7-BA22-BB3A6351591A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

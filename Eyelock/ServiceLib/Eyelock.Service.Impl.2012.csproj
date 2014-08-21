@@ -46,6 +46,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventException.cs" />
     <Compile Include="Service\DataContracts.cs" />
     <Compile Include="Service\IQueueService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

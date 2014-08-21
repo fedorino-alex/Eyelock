@@ -77,6 +77,8 @@ namespace Eyelock.Service
         public T Result { get; set; }
         [DataMember]
         public string ErrorMessage { get; set; }
+		[DataMember]
+		public Guid Event { get; set; }
 
         public static ServiceResult<T> Success(T result)
         {
@@ -94,7 +96,15 @@ namespace Eyelock.Service
         }
         public static ServiceResult<T> Fail(Exception ex)
         {
-            return new ServiceResult<T>() { IsSuccess = false, ErrorMessage = ex.Message };
+			var result = Fail(ex.Message);
+			if (ex is EventException)
+			{
+				var ev = ((EventException)ex).FailedEvent;
+				if (ev != null)
+					result.Event = ev.UID;
+			}
+
+			return result;
         }
     }
 
