@@ -26,14 +26,19 @@ namespace Eyelock.Service
 
         [DataMember(IsRequired=true, Name="timestamp")]
         public string Timestamp { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public Eyelock.Eye.Sorting.Eye LeftEye { get; set; }
+        public Eyelock.Eye.Sorting.Eye RightEye { get; set; }
     }
 
-    static class EventFactory
+    public static class EventFactory
     {
         const string ADD_EVENT_TITLE = "Добавление профиля";
         const string VIEW_EVENT_TITLE = "Просмотр профиля";
-        const string ADD = "add";
-        const string VIEW = "view";
+        public const string ADD = "add";
+        public const string VIEW = "view";
 
         public static Event GetAddEvent()
         {
@@ -67,50 +72,4 @@ namespace Eyelock.Service
         [DataMember(IsRequired = true, Name = "rightIris")]
         public string RightIris { get; set; }
     }
-
-    [DataContract]
-    public class ServiceResult<T>
-    {
-        [DataMember]
-        public bool IsSuccess { get; set; }
-        [DataMember]
-        public T Result { get; set; }
-        [DataMember]
-        public string ErrorMessage { get; set; }
-		[DataMember]
-		public Guid Event { get; set; }
-
-        public static ServiceResult<T> Success(T result)
-        {
-            return new ServiceResult<T>() { IsSuccess = true, Result = result };
-        }
-        public static ServiceResult<T> Success(T result, string message)
-        {
-            var ret = ServiceResult<T>.Success(result);
-            ret.ErrorMessage = message;
-            return ret;
-        }
-        public static ServiceResult<T> Fail(string message)
-        {
-            return new ServiceResult<T>() { IsSuccess = false, ErrorMessage = message };
-        }
-        public static ServiceResult<T> Fail(Exception ex)
-        {
-			var result = Fail(ex.Message);
-			if (ex is EventException)
-			{
-				var ev = ((EventException)ex).FailedEvent;
-				if (ev != null)
-					result.Event = ev.UID;
-			}
-
-			return result;
-        }
-    }
-
-    public class BoolResult : ServiceResult<bool>
-    { }
-
-    public class EventsResult : ServiceResult<Event[]>
-    { }
 }

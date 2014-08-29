@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Eyelock.Service
 {
-	class EventException : Exception
+	public class EventException : Exception
 	{
 		public Event FailedEvent { get; private set; }
 

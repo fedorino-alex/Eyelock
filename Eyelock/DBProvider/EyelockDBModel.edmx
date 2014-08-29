@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EyelockDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Iris">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Image_LL" Type="image" />
+          <Property Name="Image_Display_LL" Type="image" />
+          <Property Name="Code_LL" Type="image" />
+          <Property Name="Image_RL" Type="image" />
+          <Property Name="Image_Display_RL" Type="image" />
+          <Property Name="Code_RL" Type="image" />
+          <Property Name="Image_LR" Type="image" />
+          <Property Name="Image_Display_LR" Type="image" />
+          <Property Name="Code_LR" Type="image" />
+          <Property Name="Image_RR" Type="image" />
+          <Property Name="Image_Display_RR" Type="image" />
+          <Property Name="Code_RR" Type="image" />
+          <Property Name="Type" Type="int" />
+          <Property Name="StorageType" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IrisID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DateOfBirth" Type="datetime" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="Modified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Iris_Users">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Iris" Type="Self.Iris" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="Iris">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Iris">
+          <End Role="Iris" Type="Self.Iris" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Iris">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="IrisID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EyelockDBModelStoreContainer">
+          <EntitySet Name="Iris" EntityType="Self.Iris" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Iris_Users" Association="Self.FK_Iris_Users">
+            <End Role="User" EntitySet="User" />
+            <End Role="Iris" EntitySet="Iris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Iris" Association="Self.FK_User_Iris">
+            <End Role="Iris" EntitySet="Iris" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Eyelock.Database" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityType Name="Iris">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="Guid" Nullable="false" />
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+          <Property Name="Image_LL" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Image_Display_LL" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Code_LL" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Image_RL" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Image_Display_RL" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Code_RL" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Image_LR" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Image_Display_LR" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Code_LR" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Image_RR" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Image_Display_RR" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Code_RR" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Type" Type="Int32" />
+          <Property Name="StorageType" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Iris_Users" FromRole="Iris" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="Guid" Nullable="false" />
+          <Property Name="IrisID" Type="Guid" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Modified" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Iris" Relationship="Self.FK_User_Iris" FromRole="User" ToRole="Iris" />
+        </EntityType>
+        <Association Name="FK_Iris_Users">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Iris" Type="Self.Iris" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="Iris">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Iris">
+          <End Role="Iris" Type="Self.Iris" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Iris">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="IrisID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EyelockDBEntities" annotation:LazyLoadingEnabled="true" a:TypeAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
+          <EntitySet Name="Iris" EntityType="Self.Iris" />
+          <EntitySet Name="User" EntityType="Self.User" />
+          <AssociationSet Name="FK_Iris_Users" Association="Self.FK_Iris_Users">
+            <End Role="User" EntitySet="User" />
+            <End Role="Iris" EntitySet="Iris" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Iris" Association="Self.FK_User_Iris">
+            <End Role="Iris" EntitySet="Iris" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EyelockDBModelStoreContainer" CdmEntityContainer="EyelockDBEntities">
+          <EntitySetMapping Name="Iris">
+            <EntityTypeMapping TypeName="Eyelock.Database.Iris">
+              <MappingFragment StoreEntitySet="Iris">
+                <ScalarProperty Name="UID" ColumnName="UID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Image_LL" ColumnName="Image_LL" />
+                <ScalarProperty Name="Image_Display_LL" ColumnName="Image_Display_LL" />
+                <ScalarProperty Name="Code_LL" ColumnName="Code_LL" />
+                <ScalarProperty Name="Image_RL" ColumnName="Image_RL" />
+                <ScalarProperty Name="Image_Display_RL" ColumnName="Image_Display_RL" />
+                <ScalarProperty Name="Code_RL" ColumnName="Code_RL" />
+                <ScalarProperty Name="Image_LR" ColumnName="Image_LR" />
+                <ScalarProperty Name="Image_Display_LR" ColumnName="Image_Display_LR" />
+                <ScalarProperty Name="Code_LR" ColumnName="Code_LR" />
+                <ScalarProperty Name="Image_RR" ColumnName="Image_RR" />
+                <ScalarProperty Name="Image_Display_RR" ColumnName="Image_Display_RR" />
+                <ScalarProperty Name="Code_RR" ColumnName="Code_RR" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="StorageType" ColumnName="StorageType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="Eyelock.Database.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UID" ColumnName="UID" />
+                <ScalarProperty Name="IrisID" ColumnName="IrisID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams />
+  </Designer>
+</edmx:Edmx>

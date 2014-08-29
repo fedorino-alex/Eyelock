@@ -1,1 +1,1 @@
-c:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe bin\Debug\Eyelock.Service.exe
+c:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe ..\out\Eyelock.Service.exe
