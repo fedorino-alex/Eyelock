@@ -47,7 +47,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventException.cs" />
     <Compile Include="EventsQueue.cs" />
     <Compile Include="Service\IQueueService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -55,6 +54,10 @@
     <Compile Include="Service\Results.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DBProvider\Eyelock.Database.csproj">
+      <Project>{3820033e-e728-45a7-ba22-bb3a6351591a}</Project>
+      <Name>Eyelock.Database</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Device\Eyelock.DeviceAdapter.csproj">
       <Project>{7b47dcb0-0256-42ee-9821-f52839ba9a4e}</Project>
       <Name>Eyelock.DeviceAdapter</Name>
@@ -85,7 +88,8 @@
 Exit /b 0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>net start EyelockService</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

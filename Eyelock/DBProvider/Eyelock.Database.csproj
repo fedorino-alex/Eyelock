@@ -32,12 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="Eyelock, Version=2.7.12500.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Eyelock.SDK.Libs\Eyelock.dll</HintPath>
@@ -61,55 +55,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvertTools.cs" />
+    <Compile Include="DataBaseCache.cs" />
     <Compile Include="DBManager.cs" />
-    <Compile Include="EyelockDBModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EyelockDBModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EyelockDBModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EyelockDBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EyelockDBModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EyelockDBModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Iris.cs">
-      <DependentUpon>EyelockDBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="User.cs">
-      <DependentUpon>EyelockDBModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="IDBManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="EyelockDBModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>EyelockDBModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <None Include="App.Config" />
-    <None Include="EyelockDBModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>EyelockDBModel.edmx</DependentUpon>
-      <LastGenOutput>EyelockDBModel.Context.cs</LastGenOutput>
-    </None>
-    <None Include="EyelockDBModel.edmx.diagram">
-      <DependentUpon>EyelockDBModel.edmx</DependentUpon>
-    </None>
-    <None Include="EyelockDBModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>EyelockDBModel.edmx</DependentUpon>
-      <LastGenOutput>EyelockDBModel.cs</LastGenOutput>
-    </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ServiceLib\Eyelock.Service.Impl.Types.csproj">
@@ -117,14 +72,14 @@
       <Name>Eyelock.Service.Impl.Types</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>NET STOP EyelockService
 EXIT /b 0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>net start EyelockService</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -32,16 +32,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BiOmegaNet, Version=1.0.5214.26393, Culture=neutral, PublicKeyToken=ce71b3be02ef1a0a, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Eyelock.SDK.Libs\BiOmegaNet.dll</HintPath>
+    </Reference>
     <Reference Include="Eyelock">
       <HintPath>..\Eyelock.SDK.Libs\Eyelock.dll</HintPath>
-    </Reference>
-    <Reference Include="Eyelock.Eye.Matching">
-      <HintPath>..\Eyelock.SDK.Libs\Eyelock.Eye.Matching.dll</HintPath>
     </Reference>
     <Reference Include="Eyelock.Eye.Sorting">
       <HintPath>..\Eyelock.SDK.Libs\Eyelock.Eye.Sorting.dll</HintPath>
     </Reference>
-    <Reference Include="GRIVideoManagerSDKNet">
+    <Reference Include="GRIVideoManagerSDKNet, Version=2.7.12593.0, Culture=neutral, PublicKeyToken=ce71b3be02ef1a0a, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Eyelock.SDK.Libs\GRIVideoManagerSDKNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -59,6 +61,7 @@
     <Compile Include="Device.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StateManager.cs" />
+    <Compile Include="VideoManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DBProvider\Eyelock.Database.csproj">
@@ -76,7 +79,8 @@
 Exit /b 0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>net start EyelockService</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

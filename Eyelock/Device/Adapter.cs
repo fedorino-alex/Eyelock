@@ -7,9 +7,9 @@ namespace Eyelock.DeviceAdapter
 {
     public class Adapter
     {
-		public EyelockDevice Connect()
+		public EyelockDevice Connect(bool isTesting)
 		{
-            EyelockDevice device = new EyelockDevice();
+			EyelockDevice device = new EyelockDevice(isTesting);
             return device;
 		}
     }

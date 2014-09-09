@@ -264,6 +264,9 @@ namespace Eyelock.UI.EyelockService {
         private string ErrorMessageField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Guid EventField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private bool IsSuccessField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -288,6 +291,19 @@ namespace Eyelock.UI.EyelockService {
                 if ((object.ReferenceEquals(this.ErrorMessageField, value) != true)) {
                     this.ErrorMessageField = value;
                     this.RaisePropertyChanged("ErrorMessage");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Guid Event {
+            get {
+                return this.EventField;
+            }
+            set {
+                if ((this.EventField.Equals(value) != true)) {
+                    this.EventField = value;
+                    this.RaisePropertyChanged("Event");
                 }
             }
         }
@@ -341,6 +357,9 @@ namespace Eyelock.UI.EyelockService {
         private string ErrorMessageField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Guid EventField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private bool IsSuccessField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -365,6 +384,19 @@ namespace Eyelock.UI.EyelockService {
                 if ((object.ReferenceEquals(this.ErrorMessageField, value) != true)) {
                     this.ErrorMessageField = value;
                     this.RaisePropertyChanged("ErrorMessage");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Guid Event {
+            get {
+                return this.EventField;
+            }
+            set {
+                if ((this.EventField.Equals(value) != true)) {
+                    this.EventField = value;
+                    this.RaisePropertyChanged("Event");
                 }
             }
         }
@@ -405,6 +437,99 @@ namespace Eyelock.UI.EyelockService {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ServiceResultOfArrayOfUser_PgLz_PdTx", Namespace="http://schemas.datacontract.org/2004/07/Eyelock.Service")]
+    [System.SerializableAttribute()]
+    public partial class ServiceResultOfArrayOfUser_PgLz_PdTx : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ErrorMessageField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Guid EventField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool IsSuccessField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Eyelock.UI.EyelockService.User[] ResultField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ErrorMessage {
+            get {
+                return this.ErrorMessageField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ErrorMessageField, value) != true)) {
+                    this.ErrorMessageField = value;
+                    this.RaisePropertyChanged("ErrorMessage");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Guid Event {
+            get {
+                return this.EventField;
+            }
+            set {
+                if ((this.EventField.Equals(value) != true)) {
+                    this.EventField = value;
+                    this.RaisePropertyChanged("Event");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool IsSuccess {
+            get {
+                return this.IsSuccessField;
+            }
+            set {
+                if ((this.IsSuccessField.Equals(value) != true)) {
+                    this.IsSuccessField = value;
+                    this.RaisePropertyChanged("IsSuccess");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Eyelock.UI.EyelockService.User[] Result {
+            get {
+                return this.ResultField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ResultField, value) != true)) {
+                    this.ResultField = value;
+                    this.RaisePropertyChanged("Result");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="EyelockService.IQueueService")]
     public interface IQueueService {
@@ -412,11 +537,17 @@ namespace Eyelock.UI.EyelockService {
         [System.ServiceModel.OperationContractAttribute(Action="ProcessEvent", ReplyAction="http://tempuri.org/IQueueService/ProcessEventResponse")]
         Eyelock.UI.EyelockService.ServiceResultOfboolean ProcessEvent(Eyelock.UI.EyelockService.Event ev);
         
+        [System.ServiceModel.OperationContractAttribute(Action="RemoveEvent", ReplyAction="http://tempuri.org/IQueueService/RemoveEventResponse")]
+        Eyelock.UI.EyelockService.ServiceResultOfboolean RemoveEvent(Eyelock.UI.EyelockService.Event ev);
+        
         [System.ServiceModel.OperationContractAttribute(Action="GetAllevents", ReplyAction="http://tempuri.org/IQueueService/GetAllEventsResponse")]
         Eyelock.UI.EyelockService.ServiceResultOfArrayOfEvent_PgLz_PdTx GetAllEvents();
         
         [System.ServiceModel.OperationContractAttribute(Action="GetNewEvents", ReplyAction="http://tempuri.org/IQueueService/GetNewEventsResponse")]
-        Eyelock.UI.EyelockService.ServiceResultOfArrayOfEvent_PgLz_PdTx GetNewEvents(System.DateTime timestamp);
+        Eyelock.UI.EyelockService.ServiceResultOfArrayOfEvent_PgLz_PdTx GetNewEvents();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="Find", ReplyAction="http://tempuri.org/IQueueService/FindResponse")]
+        Eyelock.UI.EyelockService.ServiceResultOfArrayOfUser_PgLz_PdTx Find(string first, string last);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -450,12 +581,20 @@ namespace Eyelock.UI.EyelockService {
             return base.Channel.ProcessEvent(ev);
         }
         
+        public Eyelock.UI.EyelockService.ServiceResultOfboolean RemoveEvent(Eyelock.UI.EyelockService.Event ev) {
+            return base.Channel.RemoveEvent(ev);
+        }
+        
         public Eyelock.UI.EyelockService.ServiceResultOfArrayOfEvent_PgLz_PdTx GetAllEvents() {
             return base.Channel.GetAllEvents();
         }
         
-        public Eyelock.UI.EyelockService.ServiceResultOfArrayOfEvent_PgLz_PdTx GetNewEvents(System.DateTime timestamp) {
-            return base.Channel.GetNewEvents(timestamp);
+        public Eyelock.UI.EyelockService.ServiceResultOfArrayOfEvent_PgLz_PdTx GetNewEvents() {
+            return base.Channel.GetNewEvents();
+        }
+        
+        public Eyelock.UI.EyelockService.ServiceResultOfArrayOfUser_PgLz_PdTx Find(string first, string last) {
+            return base.Channel.Find(first, last);
         }
     }
 }

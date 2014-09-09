@@ -71,71 +71,11 @@ namespace Eyelock.Service
             get { return IPAddress.Parse(Local); }
 		}
 
-        [ConfigurationProperty("LocalPort", DefaultValue=49200)]
+        [ConfigurationProperty("LocalPort", DefaultValue=49201)]
 		public int LocalPort
 		{
 			get { return (int)base["LocalPort"]; }
 			set { base["LocalPort"] = value; }
 		}
-
-		[ConfigurationProperty("dbSettings", IsRequired=true)]
-		public DBConnectionSettings DBSettings 
-		{
-            get { return (DBConnectionSettings)base["dbSettings"]; }
-            set { base["dbSettings"] = value; }
-		}
     }
-
-	public class DBConnectionSettings : ConfigurationElement
-	{
-		[ConfigurationProperty("Server", IsRequired=true)]
-		public string Server 
-		{
-			get { return (string)base["Server"]; }
-			set { base["Server"] = value; }
-		}
-
-        [ConfigurationProperty("Database", IsRequired = true)]
-		public string Database
-		{
-			get { return (string)base["Database"]; }
-			set { base["Database"] = value; }
-		}
-
-        [ConfigurationProperty("IntegratedSequrity", IsRequired = false, DefaultValue = false)]
-		public bool IntegratedSequrity
-		{
-			get { return (bool)base["IntegratedSequrity"]; }
-			set { base["IntegratedSequrity"] = value; }
-		}
-
-		[ConfigurationProperty("UserID", IsRequired = false)]
-		public string User
-		{
-			get { return (string)base["UserID"]; }
-			set { base["UserID"] = value; }
-		}
-
-		[ConfigurationProperty("Password", IsRequired = false)]
-		public string Password
-		{
-			get { return (string)base["Password"]; }
-			set { base["Password"] = value; }
-		}
-
-		public override string ToString()
-		{
-			var sb = new System.Data.SqlClient.SqlConnectionStringBuilder();
-
-			sb.DataSource = this.Server;
-			sb.InitialCatalog = this.Database;
-			if (!(sb.IntegratedSecurity = this.IntegratedSequrity))
-			{
-				sb.UserID = this.User;
-				sb.Password = this.Password;
-			}
-
-			return sb.ConnectionString;
-		}
-	}
 }

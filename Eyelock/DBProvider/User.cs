@@ -14,14 +14,18 @@ namespace Eyelock.Database
     
     public partial class User
     {
+        public User()
+        {
+            this.Iris = new HashSet<Iris>();
+        }
+    
         public System.Guid UID { get; set; }
-        public System.Guid IrisID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public System.DateTime DateOfBirth { get; set; }
         public System.DateTime Created { get; set; }
         public System.DateTime Modified { get; set; }
     
-        public virtual Iris Iris { get; set; }
+        public virtual ICollection<Iris> Iris { get; set; }
     }
 }

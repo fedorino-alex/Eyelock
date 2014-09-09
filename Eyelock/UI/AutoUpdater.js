@@ -3,7 +3,7 @@
 
 Eyelock.AutoUpdater = function (settings)
 {
-    this._delay = settings.AutoUpdateInterval || 5000;
+    this._delay = settings.AutoUpdateInterval || 1000;
     this._callback = settings.UpdateCallback;
     this._intervalId = -1;
     this._url = settings.GetNewEvents;
@@ -22,7 +22,7 @@ updP.Start = function ()
         return true;
 
     if (this._delay > 0 && this._callback)
-        return !!(this._intervalId = setInterval(this._onTimer, this._delay, { context: this }));
+        return !!(this._intervalId = setInterval(webix.bind(this._onTimer, this), this._delay, { context: this }));
 
     return false;
 };
@@ -53,9 +53,8 @@ updP.Refresh = function ()
 
 updP._onTimer = function (args)
 {
-    var context = args.context;
-    if (context._callback)
-        context._callback.call(this, context, { url: this._url });
+    if (this._callback)
+        this._callback(this, this._url);
 };
 
 updP = null;

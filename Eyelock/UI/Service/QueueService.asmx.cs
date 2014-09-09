@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Eyelock.UI.EyelockService;
+using System;
+using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
 using BoolResult = Eyelock.UI.EyelockService.ServiceResultOfboolean;
 using EventsResult = Eyelock.UI.EyelockService.ServiceResultOfArrayOfEvent_PgLz_PdTx;
+using UsersResult = Eyelock.UI.EyelockService.ServiceResultOfArrayOfUser_PgLz_PdTx;
+using System.Linq;
 
 namespace Eyelock.UI.Service
 {
@@ -11,14 +15,15 @@ namespace Eyelock.UI.Service
     /// </summary>
     [WebService]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    [System.ComponentModel.ToolboxItem(false)]
     [ScriptService]
     public class QueueService : System.Web.Services.WebService
     {
 		/// <summary>
 		/// Поскольку WebService не может быть синглтоном.
 		/// </summary>
-		private static DateTime? m_LastUpdateTimestamp = null; 
+		private static DateTime? m_LastUpdateTimestamp = null;
+        private static JavaScriptSerializer m_Json = new JavaScriptSerializer();
+
         private T ProcessWithServiceContext<T>(Func<EyelockService.IQueueService, T> callback, bool updateTimestamp = true)
         {
             Context.Response.ContentType = "application/json";
@@ -28,40 +33,48 @@ namespace Eyelock.UI.Service
                 {
                     clientConnection.Open();
                     if (clientConnection.State == System.ServiceModel.CommunicationState.Opened)
-                    {
-                        var result = callback(clientConnection);
-						if (updateTimestamp)
-							m_LastUpdateTimestamp = DateTime.UtcNow;
-						return result;
-                    }
+                        return callback(clientConnection);
                 }
             }
 
             return default(T);
         }
 
-        [WebMethod]
+		[WebMethod]
         [ScriptMethod(UseHttpGet = false, ResponseFormat = ResponseFormat.Json)]
-        public BoolResult ProcessEvent(Eyelock.UI.EyelockService.Event ev)
-        {
+        public BoolResult ProcessEvent(string obj)
+		{
+            var ev = m_Json.Deserialize<Event>(obj);
             return ProcessWithServiceContext(service => service.ProcessEvent(ev), false);
-        }
-
-        [WebMethod]
-        [ScriptMethod(UseHttpGet = false, ResponseFormat = ResponseFormat.Json)]
-        public EventsResult GetAllEvents()
-        {
-			return ProcessWithServiceContext(service => service.GetAllEvents());
 		}
 
         [WebMethod]
         [ScriptMethod(UseHttpGet = false, ResponseFormat = ResponseFormat.Json)]
-        public EventsResult GetNewEvents() 
+        public BoolResult RemoveEvent(string obj)
         {
-			var method = m_LastUpdateTimestamp.HasValue ? 
-				(Func<EyelockService.IQueueService, EventsResult>)(service => service.GetNewEvents(m_LastUpdateTimestamp.Value)) : 
-				(Func<EyelockService.IQueueService, EventsResult>)(service => service.GetAllEvents());
-			return ProcessWithServiceContext(method);
+            var ev = m_Json.Deserialize<Event>(obj);
+            return ProcessWithServiceContext(service => service.RemoveEvent(ev), false);
+        }
+
+		[WebMethod]
+		[ScriptMethod(UseHttpGet = false, ResponseFormat = ResponseFormat.Json)]
+		public EventsResult GetAllEvents()
+		{
+            return ProcessWithServiceContext(service => service.GetAllEvents());
+		}
+
+		[WebMethod]
+		[ScriptMethod(UseHttpGet = false, ResponseFormat = ResponseFormat.Json)]
+		public EventsResult GetNewEvents()
+		{
+			return ProcessWithServiceContext(service => service.GetNewEvents());
+		}
+
+		[WebMethod]
+		[ScriptMethod(UseHttpGet = false, ResponseFormat = ResponseFormat.Json)]
+		public UsersResult Find(string first, string last)
+		{
+			return ProcessWithServiceContext(service => service.Find(first, last));
 		}
     }
 }

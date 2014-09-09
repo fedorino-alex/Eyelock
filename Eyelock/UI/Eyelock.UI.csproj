@@ -14,7 +14,7 @@
     <RootNamespace>Eyelock.UI</RootNamespace>
     <AssemblyName>Eyelock.UI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -29,11 +29,12 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\out\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -81,7 +82,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App.js" />
+    <Content Include="EventsQueue.js" />
     <Content Include="AutoUpdater.js" />
     <None Include="Service References\EyelockService\configuration91.svcinfo" />
     <None Include="Service References\EyelockService\configuration.svcinfo" />
@@ -95,6 +96,9 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="search.html" />
+    <Content Include="SearchingApp.js" />
+    <Content Include="ServiceSettings.js" />
     <Content Include="Service\QueueService.asmx" />
     <Content Include="webix\fonts\font-license.txt" />
     <Content Include="webix\fonts\fontawesome-webfont.svg" />
@@ -175,7 +179,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1459</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/webix</IISUrl>
+          <IISUrl>http://localhost:1459/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

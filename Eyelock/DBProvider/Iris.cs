@@ -18,19 +18,16 @@ namespace Eyelock.Database
         public System.Guid UserID { get; set; }
         public byte[] Image_LL { get; set; }
         public byte[] Image_Display_LL { get; set; }
-        public byte[] Code_LL { get; set; }
         public byte[] Image_RL { get; set; }
         public byte[] Image_Display_RL { get; set; }
-        public byte[] Code_RL { get; set; }
         public byte[] Image_LR { get; set; }
         public byte[] Image_Display_LR { get; set; }
-        public byte[] Code_LR { get; set; }
         public byte[] Image_RR { get; set; }
         public byte[] Image_Display_RR { get; set; }
-        public byte[] Code_RR { get; set; }
         public Nullable<int> Type { get; set; }
         public short StorageType { get; set; }
     
         public virtual User User { get; set; }
+        public virtual IrisLite IrisLite { get; set; }
     }
 }

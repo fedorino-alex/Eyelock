@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using Eyelock.Database;
 using Eyelock.DeviceAdapter;
 
 namespace Eyelock.Service
@@ -12,14 +13,28 @@ namespace Eyelock.Service
 	public class QueueService : IQueueService, IDisposable
 	{
         private EventsQueue m_Queue;
-        private EyelockDevice m_Device;
+        public EyelockDevice m_Device;
 
         public QueueService()
+            : this(false)
+        { }
+
+        public QueueService(bool test = false)
         {
-            m_Queue = new EventsQueue();
-            m_Device = new Adapter().Connect();
-            m_Device.Event += OnDeviceEvent;
+			Init(test);
         }
+
+		private void Init(bool isTest)
+		{
+			if (m_Queue == null || m_Device == null)
+			{
+				m_Device = new Adapter().Connect(isTest);
+				m_Queue = new EventsQueue();
+				m_Device.Event += OnDeviceEvent;
+			}
+
+            m_Device.StartTracking();
+		}
 
         private ServiceResult<T> ProcessWithSafeContext<T>(Func<T> process)
 		{
@@ -40,14 +55,24 @@ namespace Eyelock.Service
 			return ProcessWithSafeContext<bool>(() => ProcessEventImpl(ev));
 		}
 
-        public ServiceResult<Event[]> GetAllEvents()
+        public ServiceResult<bool> RemoveEvent(Event ev)
+        {
+            return ProcessWithSafeContext<bool>(() => RemoveEventImpl(ev));
+        }
+
+        public ServiceResult<List<Event>> GetAllEvents()
 		{
-			return ProcessWithSafeContext<Event[]>(GetAllEventsImpl);
+			return ProcessWithSafeContext<List<Event>>(GetAllEventsImpl);
 		}
 
-        public ServiceResult<Event[]> GetNewEvents(DateTime timestamp)
+        public ServiceResult<List<Event>> GetNewEvents()
 		{
-			return ProcessWithSafeContext<Event[]>(() => GetNewEventsImpl(timestamp));
+            return ProcessWithSafeContext<List<Event>>(GetNewEventsImpl);
+		}
+
+		public ServiceResult<List<User>> Find(string first, string last)
+		{
+            return ProcessWithSafeContext<List<User>>(() => FindImpl(first, last));
 		}
 
 		#endregion 
@@ -69,14 +94,14 @@ namespace Eyelock.Service
 
 		#endregion
 
-		private Event[] GetAllEventsImpl()
+        private List<Event> GetAllEventsImpl()
 		{
             return m_Queue.GetEvents();
 		}
 
-		private Event[] GetNewEventsImpl(DateTime timestamp)
+		private List<Event> GetNewEventsImpl()
 		{
-            return m_Queue.GetEvents(timestamp);
+            return m_Queue.GetNewEvents();
 		}
 
 		private bool ProcessEventImpl(Event ev)
@@ -100,13 +125,31 @@ namespace Eyelock.Service
 			throw new EventException(ev, "Отсутствует событие для обработки");
 		}
 
+        private bool RemoveEventImpl(Event ev)
+        {
+            if (ev != null)
+            {
+                ev = m_Queue[ev.UID];
+                if (!ev.Processed)
+                    return m_Queue.Remove(ev);
+            }
+
+            return false;
+        }
+
+		private List<User> FindImpl(string first, string last)
+		{
+			return DBManagerFactory.GetManager().GetUser(first, last);
+		}
+
 		private bool ProcessAddEvent(Event ev)
 		{
 			try
 			{
-				// код на добавление события в БД
+                ev = ToInternalEvent(ev);
 
-                m_Queue.Process(ev);
+				DBManagerFactory.GetManager().AddUser(ev);
+				m_Queue.Process(ev);
 				return true;
 			}
 			catch (Exception ex)
@@ -119,7 +162,9 @@ namespace Eyelock.Service
 		{
 			try
 			{
-				// код на обновление события
+                ev = ToInternalEvent(ev);
+
+				DBManagerFactory.GetManager().UpdateUser(ev);
                 m_Queue.Process(ev);
 				return true;
 			}
@@ -128,6 +173,18 @@ namespace Eyelock.Service
 				throw new EventException(ev, "Ошибка при обновлении события.", ex);
 			}
 		}
+
+        private Event ToInternalEvent(Event ev)
+        {
+            var userData = ev.User;
+            ev = m_Queue[ev.UID];
+
+            ev.User.FirstName = userData.FirstName;
+            ev.User.LastName = userData.LastName;
+            ev.User.DateOfBirth = userData.DateOfBirth;
+
+            return ev;
+        }
 
         void OnDeviceEvent(object sender, EventTrackedEventArgs e)
         {
@@ -138,8 +195,12 @@ namespace Eyelock.Service
         {
             if (m_Queue != null)
                 m_Queue.Dispose();
-            if (m_Device != null)
-                m_Device.Event -= OnDeviceEvent;
+			if (m_Device != null)
+			{
+				m_Device.StartTracking();
+				m_Device.Event -= OnDeviceEvent;
+				m_Device.Dispose();
+			}
         }
     }
 }

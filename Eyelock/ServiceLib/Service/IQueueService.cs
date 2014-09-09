@@ -13,10 +13,16 @@ namespace Eyelock.Service
         [OperationContract(Action="ProcessEvent")]
         ServiceResult<bool> ProcessEvent(Event ev);
 
+        [OperationContract(Action = "RemoveEvent")]
+        ServiceResult<bool> RemoveEvent(Event ev);
+
         [OperationContract(Action = "GetAllevents")]
-        ServiceResult<Event[]> GetAllEvents();
+        ServiceResult<List<Event>> GetAllEvents();
 
         [OperationContract(Action = "GetNewEvents")]
-        ServiceResult<Event[]> GetNewEvents(DateTime timestamp);
+        ServiceResult<List<Event>> GetNewEvents();
+
+		[OperationContract(Action = "Find")]
+		ServiceResult<List<User>> Find(string first, string last);
     }
 }

@@ -42,6 +42,12 @@
   <wsdl:message name="IQueueService_ProcessEvent_OutputMessage">
     <wsdl:part name="parameters" element="tns:ProcessEventResponse" />
   </wsdl:message>
+  <wsdl:message name="IQueueService_RemoveEvent_InputMessage">
+    <wsdl:part name="parameters" element="tns:RemoveEvent" />
+  </wsdl:message>
+  <wsdl:message name="IQueueService_RemoveEvent_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RemoveEventResponse" />
+  </wsdl:message>
   <wsdl:message name="IQueueService_GetAllEvents_InputMessage">
     <wsdl:part name="parameters" element="tns:GetAllEvents" />
   </wsdl:message>
@@ -54,10 +60,20 @@
   <wsdl:message name="IQueueService_GetNewEvents_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetNewEventsResponse" />
   </wsdl:message>
+  <wsdl:message name="IQueueService_Find_InputMessage">
+    <wsdl:part name="parameters" element="tns:Find" />
+  </wsdl:message>
+  <wsdl:message name="IQueueService_Find_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FindResponse" />
+  </wsdl:message>
   <wsdl:portType name="IQueueService">
     <wsdl:operation name="ProcessEvent">
       <wsdl:input wsaw:Action="ProcessEvent" message="tns:IQueueService_ProcessEvent_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IQueueService/ProcessEventResponse" message="tns:IQueueService_ProcessEvent_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveEvent">
+      <wsdl:input wsaw:Action="RemoveEvent" message="tns:IQueueService_RemoveEvent_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IQueueService/RemoveEventResponse" message="tns:IQueueService_RemoveEvent_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetAllEvents">
       <wsdl:input wsaw:Action="GetAllevents" message="tns:IQueueService_GetAllEvents_InputMessage" />
@@ -67,12 +83,25 @@
       <wsdl:input wsaw:Action="GetNewEvents" message="tns:IQueueService_GetNewEvents_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IQueueService/GetNewEventsResponse" message="tns:IQueueService_GetNewEvents_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="Find">
+      <wsdl:input wsaw:Action="Find" message="tns:IQueueService_Find_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IQueueService/FindResponse" message="tns:IQueueService_Find_OutputMessage" />
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="NetTcpBinding_IQueueService" type="tns:IQueueService">
     <wsp:PolicyReference URI="#NetTcpBinding_IQueueService_policy" />
     <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
     <wsdl:operation name="ProcessEvent">
       <soap12:operation soapAction="ProcessEvent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveEvent">
+      <soap12:operation soapAction="RemoveEvent" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
@@ -91,6 +120,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetNewEvents">
       <soap12:operation soapAction="GetNewEvents" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Find">
+      <soap12:operation soapAction="Find" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

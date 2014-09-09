@@ -7992,8 +7992,8 @@ webix.protoUI({
 	$setValue:function(value){
 		var popup =  webix.$$(this._settings.popup.toString());
 		var calendar = popup._body_cell;
-		if (typeof value=="string" && value)
-			value = webix.i18n.parseFormatDate(value);
+		if (typeof value == "string" && value) 
+		    value = webix.i18n.parseFormatDate(value);
 		if (value && isNaN(value.getTime())) 
 			value = "";
 		calendar.selectDate(value,true);

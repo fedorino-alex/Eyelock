@@ -9,6 +9,7 @@ namespace Eyelock.Service
     class EventsQueue : IDisposable
     {
         private IDictionary<Guid, Event> m_Events;
+        private List<Event> m_NewEvents;
         private IList<Event> m_ProcessedEvents;
 
         #region Timer
@@ -20,9 +21,6 @@ namespace Eyelock.Service
             m_Timer = new System.Timers.Timer();
             m_Timer.Interval = AutoClearTimeout.TotalMilliseconds;
             m_Timer.Elapsed += OnTimerElapsed;
-
-            if (AutoClear)
-                m_Timer.Start();
         }
         private void OnTimerElapsed(object sender, EventArgs args)
         {
@@ -35,16 +33,16 @@ namespace Eyelock.Service
         /// <summary>
         /// Удаляет автоматом обработанные события.
         /// </summary>
-        public bool AutoClear { get; set; }
         public TimeSpan AutoClearTimeout { get; set; }
 
         public EventsQueue()
         {
-            AutoClear = true;
             AutoClearTimeout = TimeSpan.FromHours(1);
+			UpdateTimer();
 
             m_Events = new Dictionary<Guid, Event>();
             m_ProcessedEvents = new List<Event>(); // объекты тут могут не совпадать по адресу с объектами в словаре
+            m_NewEvents = new List<Event>();
         }
 
         public void ClearProcessedEvents()
@@ -63,11 +61,22 @@ namespace Eyelock.Service
             lock (m_Events)
             {
                 if (ev != null)
+                {
                     m_Events[ev.UID] = ev;
+                    m_NewEvents.Add(ev);
+                }
             }
 
-            if (ev.Processed)
+            if (ev != null && ev.Processed)
                 m_ProcessedEvents.Add(ev);
+        }
+
+        public bool Remove(Event ev)
+        {
+            if (!ev.Processed)
+                return m_Events.Remove(ev.UID);
+
+            return false;
         }
 
         public void Process(Event ev)
@@ -84,34 +93,26 @@ namespace Eyelock.Service
         /// <summary>
         /// Возвращает все события в очереди.
         /// </summary>
-        public Event[] GetEvents()
-        { 
-            Event[] result = null;
+        public List<Event> GetEvents()
+        {
+            List<Event> result = null;
             lock (m_Events)
             {
-                result = new Event[m_Events.Count];
-                m_Events.Values.CopyTo(result, 0);
+                result = new List<Event>(m_Events.Values);
+                m_NewEvents.Clear();
             }
 
             return result;
         }
 
-        public Event[] GetEvents(DateTime timestamp)
+        public List<Event> GetNewEvents()
         {
-            List<Event> result = new List<Event>();
             lock (m_Events)
             {
-                foreach (var ev in m_Events.Values.Reverse())
-                {
-                    if (timestamp <= ev.Created)
-                        result.Add(ev);
-                    else
-                        break;
-                }
+                List<Event> result = new List<Event>(m_NewEvents);
+                m_NewEvents.Clear();
+                return result;
             }
-
-            result.Reverse();
-            return result.ToArray();
         }
 
         public void Dispose()

@@ -24,12 +24,7 @@ namespace Eyelock.Service
 			if (m_ServiceHost != null)
 				m_ServiceHost.Close();
 
-			// Create a ServiceHost for the CalculatorService type and 
-			// provide the base address.
 			m_ServiceHost = new ServiceHost(typeof(QueueService));
-
-			// Open the ServiceHostBase to create listeners and start 
-			// listening for messages.
 			m_ServiceHost.Open();
         }
 

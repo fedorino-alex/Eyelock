@@ -26,6 +26,7 @@ namespace Eyelock.Database
         }
     
         public virtual DbSet<Iris> Iris { get; set; }
+        public virtual DbSet<IrisLite> IrisLite { get; set; }
         public virtual DbSet<User> User { get; set; }
     }
 }

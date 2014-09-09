@@ -15,6 +15,20 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="RemoveEvent">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Eyelock.Service" minOccurs="0" name="ev" nillable="true" type="q3:Event" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RemoveEventResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Eyelock.Service" minOccurs="0" name="RemoveEventResult" nillable="true" type="q4:ServiceResultOfboolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="GetAllEvents">
     <xs:complexType>
       <xs:sequence />
@@ -23,21 +37,34 @@
   <xs:element name="GetAllEventsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Eyelock.Service" minOccurs="0" name="GetAllEventsResult" nillable="true" type="q3:ServiceResultOfArrayOfEvent_PgLz_PdTx" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Eyelock.Service" minOccurs="0" name="GetAllEventsResult" nillable="true" type="q5:ServiceResultOfArrayOfEvent_PgLz_PdTx" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetNewEvents">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="timestamp" type="xs:dateTime" />
-      </xs:sequence>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
   <xs:element name="GetNewEventsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Eyelock.Service" minOccurs="0" name="GetNewEventsResult" nillable="true" type="q4:ServiceResultOfArrayOfEvent_PgLz_PdTx" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Eyelock.Service" minOccurs="0" name="GetNewEventsResult" nillable="true" type="q6:ServiceResultOfArrayOfEvent_PgLz_PdTx" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Find">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="first" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="last" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FindResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Eyelock.Service" minOccurs="0" name="FindResult" nillable="true" type="q7:ServiceResultOfArrayOfUser_PgLz_PdTx" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
