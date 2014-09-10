@@ -21,11 +21,22 @@ namespace Eyelock.Service
 
         protected override void OnStart(string[] args)
         {
-			if (m_ServiceHost != null)
-				m_ServiceHost.Close();
+			Logger.Info("Eyelock Service starting...");
+			try
+			{
+				if (m_ServiceHost != null)
+					m_ServiceHost.Close();
 
-			m_ServiceHost = new ServiceHost(typeof(QueueService));
-			m_ServiceHost.Open();
+				m_ServiceHost = new ServiceHost(typeof(QueueService));
+				m_ServiceHost.Open();
+
+				Logger.Info("Eyelock Service started!");
+			}
+			catch (Exception ex)
+			{
+				Logger.Error(ex);
+				throw;
+			}
         }
 
         protected override void OnStop()
@@ -35,6 +46,8 @@ namespace Eyelock.Service
 				m_ServiceHost.Close();
 				m_ServiceHost = null;
 			}
+
+			Logger.Info("Eyelock Service stopped.");
         }
     }
 }

@@ -47,12 +47,12 @@ namespace Eyelock.DeviceAdapter
 
 		void OnAcknowledged(string Acknowledgement)
 		{
-			Debug.WriteLine(string.Concat("Acknowledgement: {0}", Acknowledgement));
+			Logger.Info(string.Concat("Acknowledgement: {0}", Acknowledgement));
 		}
 
 		void OnException(Exception exception)
 		{
-			Debug.WriteLine(string.Concat("PROCESS MODE EXCEPTION:\n\tMessage: {0}\n\tStack: {1}", exception.Message, exception.StackTrace));
+			Logger.Error("PROCESS MODE EXCEPTION", exception);
 		}
 
 		public event EventHandler<EventTrackedEventArgs> Event;
@@ -76,7 +76,7 @@ namespace Eyelock.DeviceAdapter
 			if (IsProcessing)
 			{
 				CurrentFrame = result.Next;
-				Debug.WriteLine("Processing next frame");
+				Logger.Info("Processing next frame");
 				if (CurrentFrame != null)
 					ProcessFrame(CurrentFrame, result.Result);
 			}
@@ -88,7 +88,7 @@ namespace Eyelock.DeviceAdapter
 			{
 				IsProcessing = true;
 
-				Debug.WriteLine("State machine starts Initial frame");
+				Logger.Info("State machine starts Initial frame");
 
 				ProcessFrame(CurrentFrame = InitialFrame, null);
 			}
@@ -106,7 +106,7 @@ namespace Eyelock.DeviceAdapter
 				CurrentTask = frame.BeginProcess(parameters);
 				CurrentTask.ContinueWith(t =>
 				{
-					Debug.WriteLine("Frame continuation starts");
+					Logger.Info("Frame continuation starts");
 					if (t.IsFaulted)
 						throw t.Exception.GetBaseException();
 					OnProcessedFrame(t.Result);
@@ -199,7 +199,7 @@ namespace Eyelock.DeviceAdapter
 
 		public Task<FrameResult> BeginProcess(object parameters)
 		{
-			Debug.WriteLine(string.Format("[{0}] start processing...", GetType().Name));
+			Logger.Info(string.Format("[{0}] start processing...", GetType().Name));
 
 			BeforeProcessing();
 
@@ -214,14 +214,14 @@ namespace Eyelock.DeviceAdapter
 		/// </summary>
 		protected virtual void BeforeProcessing()
 		{
-			Debug.WriteLine(string.Format("[{0}] before process...", GetType().Name));
+			Logger.Info(string.Format("[{0}] before process...", GetType().Name));
 		}
 		/// <summary>
 		/// Действия после выполнения (отписываемся от событий и т.п.)
 		/// </summary>
 		protected virtual void AfterProcessing()
 		{
-			Debug.WriteLine(string.Format("[{0}] after process...", GetType().Name));
+			Logger.Info(string.Format("[{0}] after process...", GetType().Name));
 		}
 
 		protected abstract FrameResult Process(object parameters);
@@ -302,13 +302,13 @@ namespace Eyelock.DeviceAdapter
 		{
 			try
 			{
-				Debug.WriteLine(string.Format("[{0}] SUCCESS", GetType().Name));
+				Logger.Info(string.Format("[{0}] SUCCESS", GetType().Name));
 				Machine.Notify(EyelockDevice.NotificationColor.None);
 				return new FrameResult() { Next = Success };
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(string.Format("[{0}] FAIL", GetType().Name));
+				Logger.Error(string.Format("[{0}] FAIL", GetType().Name), ex);
 				Fail.Exception = ex;
 				return new FrameResult() { Next = Fail };
 			}
@@ -347,7 +347,7 @@ namespace Eyelock.DeviceAdapter
 		{
 			m_Sorter.BestFoundComplete -= OnBestFoundComplete;
 
-			Debug.WriteLine(string.Format("[{0}] sorting finished", GetType().Name));
+			Logger.Info(string.Format("[{0}] sorting finished", GetType().Name));
 
 			List<Eyelock.Eye.Sorting.Eye> bestLeft = null;
 			List<Eyelock.Eye.Sorting.Eye> bestRight = null;
@@ -406,7 +406,7 @@ namespace Eyelock.DeviceAdapter
 				if (m_Sorter == null)
 					return;
 
-				Debug.WriteLine(string.Format("[{0}] processing recieved frame...", GetType().Name));
+				Logger.Info(string.Format("[{0}] processing recieved frame...", GetType().Name));
 
 				// выбираем лучший фрейм из приходящих
 				byte[] data = frame.Frame;
@@ -430,7 +430,7 @@ namespace Eyelock.DeviceAdapter
 				sortEye.Y = frame.Y;
 
 				var result = m_Sorter.FindBest(sortEye);
-				Debug.WriteLine(string.Format("[{0}] FindBest method is [{1}]", GetType().Name, result.ToString().ToUpper()));
+				Logger.Info(string.Format("[{0}] FindBest method is [{1}]", GetType().Name, result.ToString().ToUpper()));
 			});
 		}
 
@@ -438,20 +438,20 @@ namespace Eyelock.DeviceAdapter
 		{
 			try
 			{
-				Debug.WriteLine(string.Format("[{0}] PROCESSING...", GetType().Name));
+				Logger.Info(string.Format("[{0}] PROCESSING...", GetType().Name));
 
 				if (!Validate())
 				{
 					Machine.Notify(EyelockDevice.NotificationColor.Red);
 
-					Debug.WriteLine(string.Format("[{0}] FAIL", GetType().Name));
+					Logger.Warn(string.Format("[{0}] FAIL", GetType().Name));
 
 					return new FrameResult() { Next = Machine.InitialFrame }; // снова валим на ожидание пользователя
 				}
 				else
 				{
 					// результат фрейма
-					Debug.WriteLine(string.Format("[{0}] SUCCESS", GetType().Name));
+					Logger.Info(string.Format("[{0}] SUCCESS", GetType().Name));
 					return new FrameResult()
 					{
 						Next = Success,
@@ -461,7 +461,7 @@ namespace Eyelock.DeviceAdapter
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(string.Format("[{0}] FAIL", GetType().Name));
+				Logger.Error(string.Format("[{0}] FAIL", GetType().Name), ex);
 				Fail.Exception = ex;
 				return new FrameResult() { Next = Fail };
 			}
@@ -472,13 +472,13 @@ namespace Eyelock.DeviceAdapter
 		{
 			if (m_BestLeft == null)
 			{
-				Debug.WriteLine("VALIDATION FAILED: Left eye is NULL.");
+				Logger.Warn("VALIDATION FAILED: Left eye is NULL.");
 				return false;
 			}
 			
 			if (m_BestRight == null)
 			{
-				Debug.WriteLine("VALIDATION FAILED: Right eye is NULL.");
+				Logger.Warn("VALIDATION FAILED: Right eye is NULL.");
 				return false;
 			}
 
@@ -493,57 +493,58 @@ namespace Eyelock.DeviceAdapter
 			var pupilDiameter = m_BestLeft.PupilCircle.r * 2;
 			if (pupilDiameter > maxPupilDiameter || pupilDiameter < minPupilDiameter)
 			{
-				Debug.WriteLine(string.Format("VALIDATION FAILED: Left eye pupilDiameter = {0}, MIN: {1}, MAX: {2}.", pupilDiameter, minPupilDiameter, maxPupilDiameter));
+				Logger.Warn(string.Format("VALIDATION FAILED: Left eye pupilDiameter = {0}, MIN: {1}, MAX: {2}.", pupilDiameter, minPupilDiameter, maxPupilDiameter));
 				return false;
 			}
 
 			pupilDiameter = m_BestRight.PupilCircle.r * 2;
 			if (pupilDiameter > maxPupilDiameter || pupilDiameter < minPupilDiameter)
 			{
-				Debug.WriteLine(string.Format("VALIDATION FAILED: Right eye Pupil diameter = {0}, MIN: {1}, MAX: {2}.", pupilDiameter, minPupilDiameter, maxPupilDiameter));
+				Logger.Warn(string.Format("VALIDATION FAILED: Right eye Pupil diameter = {0}, MIN: {1}, MAX: {2}.", pupilDiameter, minPupilDiameter, maxPupilDiameter));
 				return false;
 			}
 
 			var irisDiameter = m_BestLeft.IrisCircle.r * 2;
 			if (irisDiameter > maxIrisDiameter || irisDiameter < minIrisDiameter)
 			{
-				Debug.WriteLine(string.Format("VALIDATION FAILED: Left eye Iris circle = {0}, MIN: {1}, MAX: {2}.", irisDiameter, minIrisDiameter, maxIrisDiameter));
+				Logger.Warn(string.Format("VALIDATION FAILED: Left eye Iris circle = {0}, MIN: {1}, MAX: {2}.", irisDiameter, minIrisDiameter, maxIrisDiameter));
 				return false;
 			}
 
 			irisDiameter = m_BestRight.IrisCircle.r * 2;
 			if (irisDiameter > maxIrisDiameter || irisDiameter < minIrisDiameter)
 			{
-				Debug.WriteLine(string.Format("VALIDATION FAILED: Right eye Iris circle = {0}, MIN: {1}, MAX: {2}.", irisDiameter, minIrisDiameter, maxIrisDiameter));
+				Logger.Warn(string.Format("VALIDATION FAILED: Right eye Iris circle = {0}, MIN: {1}, MAX: {2}.", irisDiameter, minIrisDiameter, maxIrisDiameter));
 				return false;
 			}
 
 			if (m_BestLeft.Score > maxBitCorruption)
 			{
-				Debug.WriteLine(string.Format("VALIDATION FAILED: Left eye bit corruption = {0}, MAX: {1}.", m_BestLeft.Score, maxBitCorruption));
+				Logger.Warn(string.Format("VALIDATION FAILED: Left eye bit corruption = {0}, MAX: {1}.", m_BestLeft.Score, maxBitCorruption));
 				return false;
 			}
 
 			if (m_BestRight.Score > maxBitCorruption)
 			{
-				Debug.WriteLine(string.Format("VALIDATION FAILED: Right eye bit corruption = {0}, MAX: {1}.", m_BestRight.Score, maxBitCorruption));
+				Logger.Warn(string.Format("VALIDATION FAILED: Right eye bit corruption = {0}, MAX: {1}.", m_BestRight.Score, maxBitCorruption));
 				return false;
 			}
 
 			var xDelta = Math.Abs(m_BestLeft.IrisCircle.x - m_BestLeft.PupilCircle.x);
 			if (xDelta > maxXDelta)
 			{
-				Debug.WriteLine(string.Format("VALIDATION FAILED: Left eye delta X = {0}, MAX: {1}.", xDelta, maxXDelta));
+				Logger.Warn(string.Format("VALIDATION FAILED: Left eye delta X = {0}, MAX: {1}.", xDelta, maxXDelta));
 				return false;
 			}
 
 			var yDelta = Math.Abs(m_BestLeft.IrisCircle.y - m_BestLeft.PupilCircle.y);
 			if (yDelta > maxYDelta)
 			{
-				Debug.WriteLine(string.Format("VALIDATION FAILED: Left eye delta X = {0}, MAX: {1}.", yDelta, maxYDelta));
+				Logger.Warn(string.Format("VALIDATION FAILED: Left eye delta X = {0}, MAX: {1}.", yDelta, maxYDelta));
 				return false;
 			}
 
+			Logger.Info("Validation successed.");
 			return true;
 		}
 
@@ -579,7 +580,7 @@ namespace Eyelock.DeviceAdapter
 
 		protected override FrameResult Process(object parameters)
 		{
-			Debug.WriteLine(string.Format("[{0}] PROCESSING...", GetType().Name));
+			Logger.Info(string.Format("[{0}] PROCESSING...", GetType().Name));
 			try
 			{
 				Service.Event ev = null;
@@ -608,18 +609,13 @@ namespace Eyelock.DeviceAdapter
 					ev.User.LeftIris = Eyelock.Database.ConvertTools.ToBase64(left);
 					ev.User.RightIris = Eyelock.Database.ConvertTools.ToBase64(right);
 				}
-				else
-				{
-					Debug.WriteLine(string.Format("[{0}] непонятная ситуация lhd < 0.3 || rhd < 0.3", GetType().Name));
-					Machine.Notify(EyelockDevice.NotificationColor.Yellow);
-				}
 
-				Debug.WriteLine(string.Format("[{0}] SUCCESS", GetType().Name));
+				Logger.Info(string.Format("[{0}] SUCCESS", GetType().Name));
 				return new FrameResult() { Next = Success, Result = ev };
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(string.Format("[{0}] FAIL", GetType().Name));
+				Logger.Error(string.Format("[{0}] FAIL", GetType().Name), ex);
 				Fail.Exception = ex;
 				return new FrameResult() { Next = Fail };
 			}
@@ -645,9 +641,9 @@ namespace Eyelock.DeviceAdapter
 				pairRight = m_Matcher.MatchCode(ref code, ref codes, count);
 
 			if (pairLeft != null)
-				Debug.WriteLine("Left eye HammingDistance is [{0}]", pairLeft.GetHammingDistance());
+				Logger.Info(string.Format("Left eye HammingDistance is [{0}]", pairLeft.GetHammingDistance()));
 			if (pairRight != null)
-				Debug.WriteLine("Right eye HammingDistance is [{0}]", pairRight.GetHammingDistance());
+				Logger.Info(string.Format("Right eye HammingDistance is [{0}]", pairRight.GetHammingDistance()));
 
 			if (pairLeft != null)
 				best = pairLeft;

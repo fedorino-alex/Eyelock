@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Eyelock.Service;
 
 namespace Eyelock.DeviceAdapter
 {
@@ -87,7 +88,7 @@ namespace Eyelock.DeviceAdapter
             if (m_IsActive)
                 return true;
 
-            System.Diagnostics.Debug.WriteLine("VideoManager starting.");
+            Logger.Info("VideoManager starting...");
 
             m_TokenSource = new CancellationTokenSource();
             m_IsActive = true;
@@ -103,7 +104,7 @@ namespace Eyelock.DeviceAdapter
                 Task.Factory.StartNew(_ => AcceptClients(item, m_TokenSource.Token), m_TokenSource.Token);
             }
 
-            System.Diagnostics.Debug.WriteLine("VideoManager started.");
+			Logger.Info("VideoManager started.");
 
             return true;
         }
@@ -112,17 +113,16 @@ namespace Eyelock.DeviceAdapter
         {
             if (!m_IsActive)
                 return false;
-            System.Diagnostics.Debug.WriteLine("VideoManager stoping.");
 
             lock (m_SyncObject)
             {
                 m_TokenSource.Cancel();
                 foreach (TcpListener listener in m_ListenerList)
                     listener.Stop();
-            }
+			}
 
-            m_IsActive = false;
-            System.Diagnostics.Debug.WriteLine("VideoManager stoped.");
+			m_IsActive = false;
+			Logger.Info("VideoManager stoped.");
 
             return true;
         }

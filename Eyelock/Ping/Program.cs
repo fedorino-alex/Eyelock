@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 
 namespace ConsoleApplication1
 {
@@ -11,6 +12,7 @@ namespace ConsoleApplication1
 		static Random m_rnd = new Random();
 		static void Main(string[] args)
 		{
+			Eyelock.Service.Logger.Info("Main started!");
 			try
 			{
 				if (args.Length == 0)
@@ -31,7 +33,7 @@ namespace ConsoleApplication1
 						{
 							string name = names[m_rnd.Next(names.Length)];
 							Eyelock.DeviceAdapter.EyelockDevice.NotificationColor color = (Eyelock.DeviceAdapter.EyelockDevice.NotificationColor)Enum.Parse(colors, name);
-							Console.WriteLine(string.Format("Notify {0} color", color));
+							Eyelock.Service.Logger.Info(string.Format("Notify {0} color", color));
 							device.Notify(color);
 						}
 						while (Console.ReadKey(true).Key != ConsoleKey.Escape);
@@ -40,7 +42,7 @@ namespace ConsoleApplication1
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(string.Format("Exception: {0}\nStack: {1}", ex.Message, ex.StackTrace));
+				Eyelock.Service.Logger.Error(ex);
 			}
 		}
 	}
