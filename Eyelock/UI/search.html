@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="webix/webix.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="index.css" type="text/css" media="screen" charset="utf-8">
+    <script src="webix/webix_debug.js" type="text/javascript" charset="utf-8"></script>
+    <!-- ПРОВЕРИТЬ НА РЕЛИЗНЫХ СКРИПТАХ!!! -->
+    <script src="webix_ext/layoutform.js" type="text/javascript" charset="utf-8"></script>
+    <script src="AutoUpdater.js" type="text/javascript" charset="utf-8"></script>
+    <script src="SearchingApp.js" type="text/javascript" charset="utf-8"></script>
+
+    <title>Searching</title>
+</head>
+<body>
+    <script type="text/javascript" charset="utf-8">
+        webix.ready(function ()
+        {
+            webix.ui.fullScreen();
+            new Eyelock.Search().init();
+        })
+    </script>
+</body>
+</html>
