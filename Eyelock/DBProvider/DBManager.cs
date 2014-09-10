@@ -100,7 +100,7 @@ namespace Eyelock.Database
 
 					transaction.Commit();
 				}
-				catch
+				catch 
 				{
 					transaction.Rollback();
 					throw;

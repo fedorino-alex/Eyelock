@@ -18,12 +18,7 @@ namespace Eyelock.UI.Service
     [ScriptService]
     public class QueueService : System.Web.Services.WebService
     {
-		/// <summary>
-		/// Поскольку WebService не может быть синглтоном.
-		/// </summary>
-		private static DateTime? m_LastUpdateTimestamp = null;
         private static JavaScriptSerializer m_Json = new JavaScriptSerializer();
-
         private T ProcessWithServiceContext<T>(Func<EyelockService.IQueueService, T> callback, bool updateTimestamp = true)
         {
             Context.Response.ContentType = "application/json";

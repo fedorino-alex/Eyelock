@@ -44,6 +44,7 @@ namespace Eyelock.Service
 			}
 			catch (Exception ex)
 			{
+				Logger.Error(ex);
 				return Fail<T>(ex);
 			}
 		}
