@@ -28,6 +28,7 @@ namespace ConsoleApplication1
 					Type colors = typeof(Eyelock.DeviceAdapter.EyelockDevice.NotificationColor);
 					using (Eyelock.DeviceAdapter.EyelockDevice device = new Eyelock.DeviceAdapter.EyelockDevice())
 					{
+						device.StartTracking();
 						string[] names = Enum.GetNames(colors);
 						do
 						{
@@ -39,7 +40,15 @@ namespace ConsoleApplication1
 						while (Console.ReadKey(true).Key != ConsoleKey.Escape);
 					}
 				}
+				else if (args[0].Trim('\\', '/').ToLower() == "test")
+				{
+					using (new Eyelock.Service.QueueService())
+					{
+						Console.ReadLine();
+					}
+				}
 			}
+
 			catch (Exception ex)
 			{
 				Eyelock.Service.Logger.Error(ex);

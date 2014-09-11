@@ -198,7 +198,7 @@ namespace Eyelock.Service
                 m_Queue.Dispose();
 			if (m_Device != null)
 			{
-				m_Device.StartTracking();
+				m_Device.EndTracking();
 				m_Device.Event -= OnDeviceEvent;
 				m_Device.Dispose();
 			}

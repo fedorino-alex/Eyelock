@@ -241,15 +241,15 @@ namespace Eyelock.DeviceAdapter
 		public Exception Exception { get; set; }
 		protected override FrameResult Process(object parameters)
 		{
-            try
-            {
-                Machine.Notify(EyelockDevice.NotificationColor.Red);
-                throw Exception;
-            }
-            finally
-            {
-                Environment.FailFast(Exception.Message, Exception);
-            }
+			try
+			{
+				Machine.Notify(EyelockDevice.NotificationColor.Red);
+				throw Exception;
+			}
+			finally
+			{
+				Environment.FailFast(Exception.Message, Exception);
+			}
 		}
 	}
 
@@ -328,7 +328,7 @@ namespace Eyelock.DeviceAdapter
 
 		protected override void BeforeProcessing()
 		{
-			m_Sorter = new Eye.Sorting.Sorter(5000, 5000);
+			m_Sorter = new Eye.Sorting.Sorter(5000, 10000);
 			m_Sorter.Start();
 			m_Sorter.BestFoundComplete += OnBestFoundComplete;
 
@@ -345,6 +345,7 @@ namespace Eyelock.DeviceAdapter
 
 		private void OnBestFoundComplete(List<List<Eyelock.Eye.Sorting.Eye>> rankedEyeList)
 		{
+			m_Sorter.Stop();
 			m_Sorter.BestFoundComplete -= OnBestFoundComplete;
 
 			Logger.Info(string.Format("[{0}] sorting finished", GetType().Name));
@@ -354,6 +355,9 @@ namespace Eyelock.DeviceAdapter
 			//
 			// Ranked lists come sorted -> best = last index
 			//
+
+			Logger.Info(string.Format("[{0}] ranked list count is {1}", GetType().Name, rankedEyeList.Count));
+
 			if (rankedEyeList.Count >= 1)
 				bestLeft = rankedEyeList[0];
 			if (rankedEyeList.Count >= 2)
@@ -387,51 +391,45 @@ namespace Eyelock.DeviceAdapter
 			if (m_Sorter.ScaleFrame(eye.Data, ref data, 640, 480, 10f / 11))
 				eye.Data = data;
 
-            using (BiOmegaNet.BiOmegaNet matcher = new BiOmegaNet.BiOmegaNet(1, 6))
-            {
-                byte[] code = null;
-                data = eye.Data;
-                if (matcher.GetIrisCode(ref data, eye.Width, eye.Height, eye.Width, ref code))
-                {
-                    Array.Copy(code, eye.Code, eye.Code.Length);
-                    Array.Copy(code, eye.Code.Length, eye.Mask, 0, eye.Mask.Length);
-                }
-            }
+			using (BiOmegaNet.BiOmegaNet matcher = new BiOmegaNet.BiOmegaNet(1, 6))
+			{
+				byte[] code = null;
+				data = eye.Data;
+				if (matcher.GetIrisCode(ref data, eye.Width, eye.Height, eye.Width, ref code))
+				{
+					Array.Copy(code, eye.Code, eye.Code.Length);
+					Array.Copy(code, eye.Code.Length, eye.Mask, 0, eye.Mask.Length);
+				}
+			}
 		}
 
 		internal override void ProcessFrame(VideoFrame frame)
 		{
-			Task.Factory.StartNew(() =>
-			{
-				if (m_Sorter == null)
-					return;
+			if (m_Sorter == null)
+				return;
 
-				Logger.Info(string.Format("[{0}] processing recieved frame...", GetType().Name));
+			// выбираем лучший фрейм из приходящих
+			byte[] data = frame.Frame;
+			Eye.Sorting.Eye sortEye = new Eye.Sorting.Eye();
 
-				// выбираем лучший фрейм из приходящих
-				byte[] data = frame.Frame;
-				Eye.Sorting.Eye sortEye = new Eye.Sorting.Eye();
+			sortEye.CameraId = frame.CameraId;
+			sortEye.Data = data;
+			sortEye.Diameter = frame.Diameter;
+			sortEye.Filename = frame.FileName;
+			sortEye.FrameId = frame.FrameId;
+			sortEye.HaloScore = frame.HaloScore;
+			sortEye.Id = frame.Id;
+			sortEye.IllumState = frame.IllumState;
+			sortEye.ImageId = frame.ImageId;
+			sortEye.MaxValue = frame.MaxValue;
+			sortEye.Scale = frame.Scale;
+			sortEye.Score = frame.Score;
+			sortEye.Width = frame.Width;
+			sortEye.Height = frame.Height;
+			sortEye.X = frame.X;
+			sortEye.Y = frame.Y;
 
-				sortEye.CameraId = frame.CameraId;
-				sortEye.Data = data;
-				sortEye.Diameter = frame.Diameter;
-				sortEye.Filename = frame.FileName;
-				sortEye.FrameId = frame.FrameId;
-				sortEye.HaloScore = frame.HaloScore;
-				sortEye.Id = frame.Id;
-				sortEye.IllumState = frame.IllumState;
-				sortEye.ImageId = frame.ImageId;
-				sortEye.MaxValue = frame.MaxValue;
-				sortEye.Scale = frame.Scale;
-				sortEye.Score = frame.Score;
-				sortEye.Width = frame.Width;
-				sortEye.Height = frame.Height;
-				sortEye.X = frame.X;
-				sortEye.Y = frame.Y;
-
-				var result = m_Sorter.FindBest(sortEye);
-				Logger.Info(string.Format("[{0}] FindBest method is [{1}]", GetType().Name, result.ToString().ToUpper()));
-			});
+			m_Sorter.FindBest(sortEye);
 		}
 
 		protected override FrameResult Process(object parameters)
@@ -475,7 +473,7 @@ namespace Eyelock.DeviceAdapter
 				Logger.Warn("VALIDATION FAILED: Left eye is NULL.");
 				return false;
 			}
-			
+
 			if (m_BestRight == null)
 			{
 				Logger.Warn("VALIDATION FAILED: Right eye is NULL.");
@@ -630,14 +628,14 @@ namespace Eyelock.DeviceAdapter
 			BiOmegaNet.BiOmegaPair best = null;
 
 			int count = 0;
-            byte[] codes = cache.GetLeftIrises(out count), 
-                code = GetCode(left);
+			byte[] codes = cache.GetLeftIrises(out count),
+				code = GetCode(left);
 			if (count > 0)
 				pairLeft = m_Matcher.MatchCode(ref code, ref codes, count);
 
 			codes = cache.GetRightIrises(out count);
-            code = GetCode(right);
-            if (count > 0)
+			code = GetCode(right);
+			if (count > 0)
 				pairRight = m_Matcher.MatchCode(ref code, ref codes, count);
 
 			if (pairLeft != null)
@@ -663,14 +661,14 @@ namespace Eyelock.DeviceAdapter
 			return index;
 		}
 
-        private byte[] GetCode(Eyelock.Eye.Sorting.Eye eye)
-        {
-            byte[] bytes = new byte[eye.Code.Length + eye.Mask.Length];
-            Array.Copy(eye.Code, bytes, eye.Code.Length);
-            Array.Copy(eye.Mask, 0, bytes, eye.Code.Length, eye.Mask.Length);
+		private byte[] GetCode(Eyelock.Eye.Sorting.Eye eye)
+		{
+			byte[] bytes = new byte[eye.Code.Length + eye.Mask.Length];
+			Array.Copy(eye.Code, bytes, eye.Code.Length);
+			Array.Copy(eye.Mask, 0, bytes, eye.Code.Length, eye.Mask.Length);
 
-            return bytes;
-        }
+			return bytes;
+		}
 
 	}
 

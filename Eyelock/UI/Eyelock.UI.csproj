@@ -84,6 +84,7 @@
   <ItemGroup>
     <Content Include="EventsQueue.js" />
     <Content Include="AutoUpdater.js" />
+    <None Include="Properties\PublishProfiles\Eyelock.pubxml" />
     <None Include="Service References\EyelockService\configuration91.svcinfo" />
     <None Include="Service References\EyelockService\configuration.svcinfo" />
     <None Include="Service References\EyelockService\Eyelock.UI.EyelockService.ServiceResultOfArrayOfEvent_PgLz_PdTx.datasource">
